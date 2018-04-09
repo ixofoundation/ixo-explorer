@@ -1,0 +1,32 @@
+{
+  "name": "ixo-block-explorer",
+  "version": "0.1.0",
+  "description": "Explorer for the ixo blockchain",
+  "author": "Cedric Franz",
+  "license": "MIT",
+  "dependencies": {
+    "@types/dotenv": "^4.0.3",
+    "@types/react-router-dom": "^4.2.6",
+    "base-64": "^0.1.0",
+    "moment": "^2.22.0",
+    "react": "^16.3.1",
+    "react-bootstrap": "^0.32.1",
+    "react-bootstrap-table": "^4.3.1",
+    "react-dom": "^16.3.1",
+    "react-json-view": "^1.16.1",
+    "react-router-dom": "^4.2.2",
+    "react-scripts-ts": "2.14.0",
+    "websocket": "^1.0.25"
+  },
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.2.2",
+    "@types/node": "^9.6.2",
+    "@types/react": "^16.3.5",
+    "@types/react-dom": "^16.0.4",
+    "typescript": "^2.8.1"
+  }
+}
