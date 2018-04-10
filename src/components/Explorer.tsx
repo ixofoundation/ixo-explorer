@@ -14,7 +14,7 @@ var styles = {
     },
 
     button: {
-        marginBottom: '5px'
+        margin: '5px 5px 5px 5px'
     }
 };
 
@@ -23,8 +23,8 @@ export interface Props {
 }
 export interface State {
     data: any;
-    ws: WebSocket;
     paused: boolean;
+    chainUri: string;
 }
 
 class Explorer extends React.Component<Props, State> {
@@ -33,14 +33,14 @@ class Explorer extends React.Component<Props, State> {
         super(props, context);
         this.state = {
             data: [],
-            ws: new WebSocket('NODE_URI'),
-            paused: false
+            paused: false,
+            chainUri: ''
         };
     }
 
-    componentWillMount() {
-        this.setState({ data: [], paused: false });
-        this.state.ws.onmessage = event => {
+    subscribeToChain(chainUri: string) {
+        var ws = new WebSocket('ws://' + chainUri + '/websocket');
+        ws.onmessage = event => {
             var blockData = this.parseEvent(event);
             if (blockData.blockHash !== undefined) {
                 if (!this.state.paused) {
@@ -54,15 +54,11 @@ class Explorer extends React.Component<Props, State> {
             }
         };
 
-        this.state.ws.onopen = () => {
-            this.state.ws.send(
+        ws.onopen = () => {
+            ws.send(
                 `{"jsonrpc": "2.0", "method": "subscribe", "params": {"query": "tm.event='NewBlock'" }, "id": "ixo-explorer"}`
             );
         };
-    }
-
-    componentWillUnmount() {
-        this.setState({ paused: true });
     }
 
     parseEvent(event: any) {
@@ -103,6 +99,12 @@ class Explorer extends React.Component<Props, State> {
         }
     }
 
+    onSubmit = (e) => {
+        e.preventDefault();
+        this.setState({ chainUri: e.target.chainUri.value });
+        this.subscribeToChain(e.target.chainUri.value);
+    }
+
     renderTable() {
         return (
             <table className="table table-bordered table-sm">
@@ -135,11 +137,27 @@ class Explorer extends React.Component<Props, State> {
                 <div className="row">
                     <h3>Explorer</h3>
                 </div>
+                <form className="form-signin" onSubmit={this.onSubmit}>
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            name="chainUri"
+                            className="form-control"
+                            placeholder="Chain IP and PORT"
+                        />
+                        <button style={styles.button} className="btn btn-primary btn-sm" type="submit">connect</button>
+                        <button type="button" style={styles.button} className="btn btn-primary btn-sm" onClick={() => this.togglePause()}>
+                            {(this.state.paused ? 'Paused' : 'Pause')}
+                        </button>
+                    </div>
+                </form>
+
                 <div className="row">
                     <button type="button" style={styles.button} className="btn btn-primary btn-sm" onClick={() => this.togglePause()}>
                         {(this.state.paused ? 'Paused' : 'Pause')}
                     </button>
                 </div>
+
                 <div className="row">
                     {this.renderTable()}
                 </div>

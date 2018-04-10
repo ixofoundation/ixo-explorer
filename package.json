@@ -16,11 +16,12 @@
     "react-json-view": "^1.16.1",
     "react-router-dom": "^4.2.2",
     "react-scripts-ts": "2.14.0",
+    "serve": "^6.5.4",
     "websocket": "^1.0.25"
   },
   "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build"
+    "dev": "react-scripts-ts start",
+    "start": "react-scripts-ts build && serve -s build"
   },
   "devDependencies": {
     "@types/jest": "^22.2.2",
