@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { Connection } from '../blockchain/Connection';
+import { NewBlockEvent, BlockQueue } from '../blockchain/BlockQueue';
 
 var base64 = require('base-64');
 var moment = require('moment');
@@ -25,6 +27,9 @@ export interface State {
     data: any;
     paused: boolean;
     chainUri: string;
+    lastBlockHeight: string;
+    syncBlock: number;
+    blockQueue?: BlockQueue;
 }
 
 class Explorer extends React.Component<Props, State> {
@@ -34,7 +39,9 @@ class Explorer extends React.Component<Props, State> {
         this.state = {
             data: [],
             paused: false,
-            chainUri: ''
+            chainUri: 'localhost:46657',
+            lastBlockHeight: '-1',
+            syncBlock: -1,
         };
     }
 
@@ -91,6 +98,12 @@ class Explorer extends React.Component<Props, State> {
         return {};
     }
 
+    onChangeChainUri(event: any) {
+        if (event && event.target) {
+            this.setState({chainUri: (event.target.value || '')});
+        }
+    }
+
     togglePause() {
         if (this.state.paused) {
             this.setState({ paused: false, data: [] });
@@ -131,6 +144,34 @@ class Explorer extends React.Component<Props, State> {
         );
     }
 
+    showBlockHeight() {
+        var conn = new Connection(this.state.chainUri);
+        conn.getLastBlock().then((block: any) => {
+                this.setState({lastBlockHeight: block.header.height});
+              })
+              .catch(error => {
+                console.log(error);
+                return '';
+              });
+    }
+
+    startSync() {
+        var conn = new Connection(this.state.chainUri);
+        var blockQueue = new BlockQueue( conn, 29000);
+        this.setState({blockQueue: blockQueue});
+        blockQueue.onBlock( (event: NewBlockEvent) => {
+            console.log(event.getBlockHeight());
+            this.setState({syncBlock: event.getBlockHeight()});
+        });
+        blockQueue.start();
+    }
+
+    stopSync() {
+        if (this.state.blockQueue) {
+          this.state.blockQueue.stop();
+        }
+    }
+
     render() {
         return (
             <div className="container">
@@ -142,13 +183,25 @@ class Explorer extends React.Component<Props, State> {
                         <input
                             type="text"
                             name="chainUri"
+                            value={this.state.chainUri}
                             className="form-control"
                             placeholder="Chain IP and PORT"
+                            onChange={(event) => this.onChangeChainUri(event)}
                         />
                         <button style={styles.button} className="btn btn-primary btn-sm" type="submit">connect</button>
                         <button type="button" style={styles.button} className="btn btn-primary btn-sm" onClick={() => this.togglePause()}>
                             {(this.state.paused ? 'Paused' : 'Pause')}
                         </button>
+                        <button type="button" style={styles.button} className="btn btn-primary btn-sm" onClick={() => this.showBlockHeight()}>
+                            Block Height
+                        </button>
+                        <button type="button" style={styles.button} className="btn btn-primary btn-sm" onClick={() => this.startSync()}>
+                            Start Sync
+                        </button>
+                        <button type="button" style={styles.button} className="btn btn-primary btn-sm" onClick={() => this.stopSync()}>
+                            Stop Sync
+                        </button>
+                        <div>Last Block: {this.state.lastBlockHeight}  SyncBlock: {this.state.syncBlock}</div>
                     </div>
                 </form>
 
