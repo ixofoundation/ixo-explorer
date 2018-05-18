@@ -1,9 +1,25 @@
 import { Connection } from './Connection';
 
-export class NewBlockEvent {
+export class Block {
   block: any;
   constructor(block: any) {
     this.block = block;
+  }
+
+  getBlockHeight(): number {
+    return this.block.header.height;
+  }
+
+  hasTransactions(): boolean {
+    return (this.block.data.txs.length !== 0);
+  }
+
+}
+
+export class NewBlockEvent {
+  block: Block;
+  constructor(block: any) {
+    this.block = new Block(block);
   }
 
   getBlock() {
@@ -11,7 +27,7 @@ export class NewBlockEvent {
   }
 
   getBlockHeight(): number {
-    return this.getBlock().header.height;
+    return this.getBlock().getBlockHeight();
   }
 }
 
