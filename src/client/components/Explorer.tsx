@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Connection } from '../blockchain/Connection';
-import { NewBlockEvent, BlockQueue } from '../blockchain/BlockQueue';
+import { Connection } from '../../blockchain/Connection';
+import { NewBlockEvent, BlockQueue } from '../../blockchain/BlockQueue';
+import { Block } from '../models';
 
 var base64 = require('base-64');
 var moment = require('moment');
@@ -46,10 +47,10 @@ class Explorer extends React.Component<Props, State> {
     }
 
     subscribeToChain(chainUri: string) {
-        var ws = new WebSocket('ws://' + chainUri + '/websocket');
+        let ws = new WebSocket('ws://' + chainUri + '/websocket');
         ws.onmessage = event => {
-            var blockData = this.parseEvent(event);
-            if (blockData.blockHash !== undefined) {
+            let blockData: Block = this.parseEvent(event);
+            if (blockData.blockHash !== '') {
                 if (!this.state.paused) {
                     var newData = this.state.data;
                     newData.unshift(blockData);
@@ -68,39 +69,30 @@ class Explorer extends React.Component<Props, State> {
         };
     }
 
-    parseEvent(event: any) {
+    parseEvent(event: any): Block {
+        let currentBlock = new Block();
         const obj = JSON.parse(event.data);
-
         if (obj.result.data) {
             var block = obj.result.data.data.block;
-            var blockHash = block.last_commit.blockID.hash;
-            var height = block.header.height;
-            var timestamp = block.header.time;
-            var txCount = block.header.num_txs;
-            var txData = block.data.txs.map((item: any) => {
+            currentBlock.blockData = block;
+            currentBlock.blockHash = block.last_commit.blockID.hash;
+            currentBlock.height = block.header.height;
+            currentBlock.timstamp = block.header.time;
+            currentBlock.txCount = block.header.num_txs;
+            currentBlock.txData = block.data.txs.map((item: any) => {
                 var decoded = base64.decode(item);
                 if (decoded.length > 8) {
                     decoded = decoded.substring(4, decoded.length - 4);
                 }
                 return decoded;
             });
-
-            return {
-                blockHash: blockHash,
-                height: height,
-                timstamp: timestamp,
-                txCount: txCount,
-                txData: txData,
-                blockData: block
-            };
         }
-
-        return {};
+        return currentBlock;
     }
 
     onChangeChainUri(event: any) {
         if (event && event.target) {
-            this.setState({chainUri: (event.target.value || '')});
+            this.setState({ chainUri: (event.target.value || '') });
         }
     }
 
@@ -130,11 +122,11 @@ class Explorer extends React.Component<Props, State> {
                     </tr>
                 </thead>
                 <tbody>
-                    {this.state.data.map((item: any, i: any) => {
+                    {this.state.data.map((item: Block, i: any) => {
                         return (<tr key={i}>
                             <td>{item.height}</td>
                             <td><Link to={{ pathname: `/block/${item.blockHash}`, state: item }}>{item.blockHash}</Link></td>
-                            <td>{moment(item.timestamp).fromNow()}</td>
+                            <td>{moment(item.timstamp).fromNow()}</td>
                             <td><Link to={{ pathname: `/transaction/${item.blockHash}`, state: item }}>{item.txCount}</Link></td>
                         </tr>);
                     })
@@ -147,28 +139,28 @@ class Explorer extends React.Component<Props, State> {
     showBlockHeight() {
         var conn = new Connection(this.state.chainUri);
         conn.getLastBlock().then((block: any) => {
-                this.setState({lastBlockHeight: block.header.height});
-              })
-              .catch(error => {
-                console.log(error);
+            this.setState({ lastBlockHeight: block.header.height });
+        })
+            .catch(error => {
+                console.log(error);
                 return '';
-              });
+            });
     }
 
     startSync() {
         var conn = new Connection(this.state.chainUri);
-        var blockQueue = new BlockQueue( conn, 29000);
-        this.setState({blockQueue: blockQueue});
-        blockQueue.onBlock( (event: NewBlockEvent) => {
+        var blockQueue = new BlockQueue(conn, 29000);
+        this.setState({ blockQueue: blockQueue });
+        blockQueue.onBlock((event: NewBlockEvent) => {
             console.log(event.getBlockHeight());
-            this.setState({syncBlock: event.getBlockHeight()});
+            this.setState({ syncBlock: event.getBlockHeight() });
         });
         blockQueue.start();
     }
 
     stopSync() {
         if (this.state.blockQueue) {
-          this.state.blockQueue.stop();
+            this.state.blockQueue.stop();
         }
     }
 

@@ -11,6 +11,7 @@ const Home = () => {
 };
 
 const Block = (props: any) => {
+  debugger;
   var json = props.location.state.blockData;
   return (
     <div>
