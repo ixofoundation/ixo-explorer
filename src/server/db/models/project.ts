@@ -255,18 +255,18 @@ export class Project {
      * Getter createdOn
      * @return {Date }
      */
-	public get createdOn(): Date  {
-		return this._createdOn;
-	}
+    public get createdOn(): Date {
+        return this._createdOn;
+    }
 
     /**
      * Setter createdOn
      * @param {Date } value
      */
-	public set createdOn(value: Date ) {
-		this._createdOn = value;
-	}
-    
+    public set createdOn(value: Date) {
+        this._createdOn = value;
+    }
+
     /**
      * Getter imageLink
      * @return {string }

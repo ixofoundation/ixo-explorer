@@ -1,5 +1,5 @@
-import { Document, Schema, Model, model } from "mongoose";
-import { Project } from "./project";
+import { Document, Schema, Model, model } from 'mongoose';
+import { Project } from './project';
 
 export interface IProjectModel extends Project, Document {
 }
@@ -91,10 +91,9 @@ export var ProjectSchema: Schema = new Schema({
     }
 }, { strict: false });
 
-ProjectSchema.pre("save", function (this: Project, next) {
+ProjectSchema.pre('save', function (this: Project, next: any) {
     next();
     return this;
 });
 
-
-export const ProjectDB: Model<IProjectModel> = model<IProjectModel>("Project", ProjectSchema);
+export const ProjectDB: Model<IProjectModel> = model<IProjectModel>('Project', ProjectSchema);

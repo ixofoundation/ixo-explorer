@@ -1,4 +1,4 @@
-import { ProjectDB } from "../db/models/project_db";
+import { ProjectDB } from '../db/models/project_db';
 
 declare var Promise: any;
 
@@ -9,8 +9,7 @@ export class ProjectHandler {
             return ProjectDB.create(args, (err, res) => {
                 if (err) {
                     reject(err);
-                }
-                else {
+                } else {
                     resolve(res);
                 }
             });
@@ -22,12 +21,10 @@ export class ProjectHandler {
             return ProjectDB.find({}, (err, res) => {
                 if (err) {
                     reject(err);
-                }
-                else {
+                } else {
                     resolve(res);
                 }
             });
         });
     }
 }
-

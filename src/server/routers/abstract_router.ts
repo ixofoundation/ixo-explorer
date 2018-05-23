@@ -4,7 +4,7 @@ import * as logger from '../util/logger';
 const jayson = require('jayson/promise');
 
 export abstract class AbstractRouter {
-    router: Router
+    router: Router;
 
     constructor() {
         this.router = Router();
@@ -23,7 +23,7 @@ export abstract class AbstractRouter {
                         (data: any) => resolve(data))
                     .catch((err: Error) => {
                         logger.default.error(err.message, err);
-                        reject(jayson.server().error(null, err.message))
+                        reject(jayson.server().error(null, err.message));
                     });
             });
         };

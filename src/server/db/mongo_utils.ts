@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 import * as http from 'http';
-import { MONGODB_URI } from "../util/secrets";
+import { MONGODB_URI } from '../util/secrets';
 
 export default class MongoUtils {
 
