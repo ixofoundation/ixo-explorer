@@ -1,7 +1,8 @@
 import * as express from 'express';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
-import * as logger from './Logger';
+import * as logger from './util/logger';
+import ProjectRouter from './routers/project_router';
 
 class App {
 
@@ -28,6 +29,7 @@ class App {
         this.express.get('/', (req, res, next) => {
             res.send('API is running');
         });
+        this.express.use('/api/project', ProjectRouter);
 
         this.express.use(logger.after);
     }

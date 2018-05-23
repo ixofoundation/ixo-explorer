@@ -1,13 +1,14 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 import * as http from 'http';
+import { MONGODB_URI } from "../util/secrets";
 
 export default class MongoUtils {
 
     server: http.Server;
     port: any;
 
-    constructor(server: http.Server, port: string) {
+    constructor(server: http.Server, port: number) {
         this.server = server;
         this.port = this.normalizePort(port);
         this.connectToDb = this.connectToDb.bind(this);
@@ -18,7 +19,7 @@ export default class MongoUtils {
     connectToDb() {
         var self = this;
         require('mongoose').Promise = global.Promise;
-        mongoose.connect(process.env.MONGODB_URI || '');
+        mongoose.connect(MONGODB_URI || '');
         let db = mongoose.connection;
         db.on('error', console.error.bind(console, 'Mongo connection error: Cannot start'));
         db.once('open', function () {
