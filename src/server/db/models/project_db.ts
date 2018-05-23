@@ -5,15 +5,22 @@ export interface IProjectModel extends Project, Document {
 }
 
 export var ProjectSchema: Schema = new Schema({
-    did: {
+    txHash: {
         type: String,
         index: true,
-        unique: true // Unique index. 
+        unique: true
+    },
+    senderDid: {
+        type: String,
+        index: true,
+    },
+    projectDid: {
+        type: String,
+        index: true,
     },
     pubKey: {
         type: String,
         required: true,
-        unique: true
     },
     title: {
         type: String,
@@ -38,7 +45,6 @@ export var ProjectSchema: Schema = new Schema({
     createdBy: {
         type: String,
         index: true,
-        unique: true
     },
     country: {
         type: String,
@@ -58,10 +64,6 @@ export var ProjectSchema: Schema = new Schema({
         required: false,
         default: 'default'
     },
-    serviceURI: {
-        type: String,
-        required: true
-    },
     socialMedia: {
         facebookLink: {
             type: String,
@@ -79,15 +81,15 @@ export var ProjectSchema: Schema = new Schema({
             default: ''
         }
     },
-    webLink: {
+    serviceEndpoint: {
         type: String,
         required: false
     },
-    image: {
+    imageLink: {
         type: String,
         required: false
     }
-}, { strict: false });   // Allow any other fields to also be included over and above the standard ones
+}, { strict: false });
 
 ProjectSchema.pre("save", function (this: Project, next) {
     next();

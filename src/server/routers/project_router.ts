@@ -10,7 +10,6 @@ export class ProjectRouter extends AbstractRouter {
         this.register(config, "listProjects", handler.list);
         return config;
     }
-
 }
 
 export default new ProjectRouter().router;

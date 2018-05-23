@@ -5,33 +5,58 @@ interface SocialMedia {
 }
 
 export class Project {
-    private _did: string = 'did:ixo:';
+    private _txHash: string = '';
+    private _senderDid: string = 'did:ixo:';
+    private _projectDid: string = 'did:ixo:';
     private _pubKey: string = '';
     private _title: string = '';
     private _shortDescription: string = '';
     private _longDescription: string = '';
     private _impactAction: string = '';
+    private _createdOn: Date = new Date();
     private _createdBy: string = 'did:ixo:';
     private _country: string = '';
     private _sdgs: string[] = [''];
     private _impactsRequired: number = 0;
     private _claimTemplate: string = 'default';
-    private _serviceURI: string = '';
     private _socialMedia: SocialMedia = {
         facebookLink: '',
         instagramLink: '',
         twitterLink: ''
     };
-    private _webLink: string = '';
-    private _image: string = '';
-
+    private _serviceEndpoint: string = '';
+    private _imageLink: string = '';
 
     /**
-     * Getter did
+    * Getter txHash
+    * @return {string }
+    */
+    public get txHash(): string {
+        return this._txHash;
+    }
+
+    /**
+     * Setter txHash
+     * @param {string } value
+     */
+    public set txHash(value: string) {
+        this._txHash = value;
+    }
+
+    /**
+     * Getter senderDid
      * @return {string }
      */
-    public get did(): string {
-        return this._did;
+    public get senderDid(): string {
+        return this._senderDid;
+    }
+
+    /**
+     * Setter senderDid
+     * @param {string } value
+     */
+    public set senderDid(value: string) {
+        this._senderDid = value;
     }
 
     /**
@@ -115,43 +140,11 @@ export class Project {
     }
 
     /**
-     * Getter serviceURI
-     * @return {string }
-     */
-    public get serviceURI(): string {
-        return this._serviceURI;
-    }
-
-    /**
      * Getter socialMedia
      * @return {SocialMedia }
      */
     public get socialMedia(): SocialMedia {
         return this._socialMedia;
-    }
-
-    /**
-     * Getter webLink
-     * @return {string }
-     */
-    public get webLink(): string {
-        return this._webLink;
-    }
-
-    /**
-     * Getter image
-     * @return {string }
-     */
-    public get image(): string {
-        return this._image;
-    }
-
-    /**
-     * Setter did
-     * @param {string } value
-     */
-    public set did(value: string) {
-        this._did = value;
     }
 
     /**
@@ -235,14 +228,6 @@ export class Project {
     }
 
     /**
-     * Setter serviceURI
-     * @param {string } value
-     */
-    public set serviceURI(value: string) {
-        this._serviceURI = value;
-    }
-
-    /**
      * Setter socialMedia
      * @param {SocialMedia } value
      */
@@ -251,19 +236,67 @@ export class Project {
     }
 
     /**
-     * Setter webLink
-     * @param {string } value
+     * Getter projectDid
+     * @return {string }
      */
-    public set webLink(value: string) {
-        this._webLink = value;
+    public get projectDid(): string {
+        return this._projectDid;
     }
 
     /**
-     * Setter image
+     * Setter projectDid
      * @param {string } value
      */
-    public set image(value: string) {
-        this._image = value;
+    public set projectDid(value: string) {
+        this._projectDid = value;
+    }
+
+    /**
+     * Getter createdOn
+     * @return {Date }
+     */
+	public get createdOn(): Date  {
+		return this._createdOn;
+	}
+
+    /**
+     * Setter createdOn
+     * @param {Date } value
+     */
+	public set createdOn(value: Date ) {
+		this._createdOn = value;
+	}
+    
+    /**
+     * Getter imageLink
+     * @return {string }
+     */
+    public get imageLink(): string {
+        return this._imageLink;
+    }
+
+    /**
+     * Setter imageLink
+     * @param {string } value
+     */
+    public set imageLink(value: string) {
+        this._imageLink = value;
+    }
+
+    /**
+     * Getter serviceEndpoint
+     * @return {string }
+     */
+    public get serviceEndpoint(): string {
+        return this._serviceEndpoint;
+    }
+
+    /**
+     * Setter serviceEndpoint
+     * @param {string } value
+     */
+    public set serviceEndpoint(value: string) {
+        this._serviceEndpoint = value;
     }
 
 }
