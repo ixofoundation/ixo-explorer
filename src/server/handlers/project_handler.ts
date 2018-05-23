@@ -17,10 +17,17 @@ export class ProjectHandler {
         });
     }
 
-    /* list = (args: any) => {
-        var request = new Request(args);
-        return this.find(request.data);
+    list = (args: any) => {
+        return new Promise((resolve: Function, reject: Function) => {
+            return ProjectDB.find({}, (err, res) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(res);
+                }
+            });
+        });
     }
- */
 }
 
